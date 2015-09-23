@@ -1,0 +1,8 @@
+---- cJSON_Number Matches (7 in 3 files) ----
+cJSON.c (src\jdsmart):	item->type=cJSON_Number;
+cJSON.c (src\jdsmart):		case cJSON_Number:	out=print_number(item);break;
+cJSON.c (src\jdsmart):cJSON *cJSON_CreateNumber(double num)			{cJSON *item=cJSON_New_Item();if(item){item->type=cJSON_Number;item->valuedouble=num;item->valueint=(int)num;}return item;}
+cJSON.h (src\jdsmart):#define cJSON_Number 3
+cJSON.h (src\jdsmart):	int valueint;				/* The item's number, if type==cJSON_Number */
+cJSON.h (src\jdsmart):	double valuedouble;			/* The item's number, if type==cJSON_Number */
+Jdservice.c (src\jdsmart):				else if(pTmp->type==cJSON_Number)
