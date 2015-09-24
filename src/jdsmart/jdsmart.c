@@ -242,7 +242,7 @@ static void  json_to_binary(jdsmart_down_cmd_ptr cmd)
 
 static void build_message(CONTROL_CMD_TYPE type, unsigned char *pvalue)
 {
-	unsigned int i;
+	//unsigned int i;
     unsigned char len, value, eccPosition, totalLen;
     unsigned short eccValue;
     unsigned char buf[MSG_WITH_DATA_LEN];

@@ -471,7 +471,7 @@ static int jd_send_data(unsigned char *data, unsigned char len)
     {
         //data[YD_DATA_LEN + 1] = 0;
         //data[YD_DATA_LEN + 2] = 5;
-        value = data[YD_DATA_LEN + 2] + (data[YD_DATA_LEN + 1] << 8);
+        value = data[YD_DATA_LEN + 1] + (data[YD_DATA_LEN + 2] << 8);
     }
     else
     {
@@ -479,7 +479,7 @@ static int jd_send_data(unsigned char *data, unsigned char len)
         return -1;
     }
     
-    (void)sprintf(Jd_GlobalVar.post_tx, format_upload,
+    (void)sprintf((char *)Jd_GlobalVar.post_tx, format_upload,
                             //g_struJdAttribute[choice].record,
                             jdArgs.feedid,
                             jdArgs.accesskey,
@@ -494,16 +494,16 @@ COMMON_ACT:
         custom_log("data[%d] = 0x%02x", ret, data[ret]);
 #endif
 
-#define   FILT_LIFE              3650
+//#define   FILT_LIFE              3650
     //data[5] = 0;
     //data[6] = 6;
-    value = data[6] + (data[5] << 8);
-    custom_log("value is %d", value);
+    value = data[5] + (data[6] << 8);
+    //custom_log("value is %d", value);
     //value = data[6] + data[5] << 8;
     left_time = data[11] + (data[12] << 8);
-    left_time = (FILT_LIFE - left_time) * 100 / FILT_LIFE;
+    //left_time = (FILT_LIFE - left_time) * 100 / FILT_LIFE;
     //left_time = 56;
-    (void)sprintf(Jd_GlobalVar.post_tx, format_common,
+    (void)sprintf((char *)Jd_GlobalVar.post_tx, format_common,
                     jdArgs.feedid,
                     jdArgs.accesskey,
                     data[3],

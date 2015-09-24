@@ -58,6 +58,7 @@ struct sockaddr_in struRemoteAddr;
 u8 JD_PROUUID[7];
 int g_Jdfd;
 
+extern void app_search_device(char *rxMessage, int rLength, int ufd, struct sockaddr_in toaddr);
 /*************************************************
 * Function: HF_ReadDataFormFlash
 * Description: 
@@ -307,11 +308,11 @@ USER_FUNC static void HF_CloudRecvfunc(void* arg)
 {
     s32 s32RecvLen=0; 
     fd_set fdread;
-    u32 u32Index;
-    u32 u32Len=0; 
+    //u32 u32Index;
+    //u32 u32Len=0; 
     u32 u32ActiveFlag = 0;
-    struct sockaddr_in cliaddr;
-    int connfd;
+    //struct sockaddr_in cliaddr;
+    //int connfd;
     extern u8 g_u8ClientStart;
     u32 u32MaxFd = 0;
     struct timeval timeout; 
@@ -458,7 +459,7 @@ USER_FUNC static void HF_CloudRecvfunc(void* arg)
             s32RecvLen = recvfrom(g_Jdfd, g_u8JdRcvBuffer, sizeof(g_u8JdRcvBuffer), 0, (struct sockaddr *)&addr, (socklen_t*)&tmp); 
             if(s32RecvLen >=0) 
             {
-                app_search_device(g_u8JdRcvBuffer, s32RecvLen, g_Jdfd, addr);
+                app_search_device((char *)g_u8JdRcvBuffer, s32RecvLen, g_Jdfd, addr);
                 //ZC_SendJDQueryReq(g_u8JdRcvBuffer, s32RecvLen, addr);
             } 
         }
@@ -600,9 +601,9 @@ u32 HF_ListenClient(PTC_Connection *pstruConnection)
 
     ZC_Printf("Tcp Listen Port = %d\n", pstruConnection->u16Port);
     g_struProtocolController.struClientConnection.u32Socket = fd;
-
-    return ZC_RET_OK;
 #endif
+    return ZC_RET_OK;
+
 }
 
 /*************************************************
@@ -721,7 +722,7 @@ USER_FUNC static void HF_Cloudfunc(void* arg)
 void HF_Init(void *arg)
 {
     u32 u32MagicFlag = 0xFFFFFFFF;
-#if 0
+#if 1
     while(1)
     {
         hffile_userbin_read(300, (char *)(&u32MagicFlag), 4);
@@ -817,7 +818,7 @@ void HF_WakeUp()
 *************************************************/
 void HF_Sleep()
 {
-    u32 u32Index;
+    //u32 u32Index;
     
     close(g_Bcfd);
 

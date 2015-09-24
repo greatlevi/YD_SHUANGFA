@@ -24,7 +24,7 @@
 *************************************************/
 void MSG_Init()
 {
-    u32 u32Index;
+    //u32 u32Index;
     MSG_InitQueue(&g_struRecvQueue);
     MSG_InitQueue(&g_struSendQueue);
 
@@ -262,7 +262,7 @@ void MSG_RecvDataFromCloud(u8 *pu8Data, u32 u32DataLen)
 {
     u32 u32RetVal;
     u16 u16PlainLen;
-    u32 u32i;
+    //u32 u32i;
     u32RetVal = MSG_RecvData(&g_struRecvBuffer, pu8Data, u32DataLen);
 
     if (ZC_RET_OK == u32RetVal)

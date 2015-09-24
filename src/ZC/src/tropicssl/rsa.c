@@ -1,4 +1,3 @@
-#if 1
 /*
 *	The RSA public-key cryptosystem
 *
@@ -333,5 +332,4 @@ void rsa_free(rsa_context * ctx)
 }
 
 
-#endif
 #endif

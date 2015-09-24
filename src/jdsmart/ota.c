@@ -63,7 +63,7 @@ int encode_signature(char *url)
 	sig +=10;
 	char signature[50]={0};
 	URLEncode(sig, strlen(sig), signature, sizeof(signature));
-	strcat(Jd_GlobalVar.ssl_tx, signature);
+	strcat((char *)Jd_GlobalVar.ssl_tx, signature);
 	return 1;
 }
 int Httpc_get(char *purl, int *dl_status)
@@ -106,13 +106,13 @@ int Httpc_get(char *purl, int *dl_status)
 	}	
 	bzero(temp_buf,sizeof(temp_buf));
 	
-	if((rv=hfhttp_parse_URL(test_url,temp_buf , 256, &url))!=HF_SUCCESS)
+	if((rv=hfhttp_parse_URL((const char *)test_url,temp_buf , 256, &url))!=HF_SUCCESS)
 	{
 		rv = DOWNLOAD_FAIL;
 		goto exit;
 	}
 
-	if((rv=hfhttp_open_session(&hhttp,test_url,0,tls_cfg,3))!=HF_SUCCESS)
+	if((rv=hfhttp_open_session(&hhttp,(const char *)test_url,0,tls_cfg,3))!=HF_SUCCESS)
 	{
 		custom_log("http open fail\n");
 		rv = DOWNLOAD_FAIL;

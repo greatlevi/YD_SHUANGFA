@@ -108,7 +108,9 @@ void app_search_device(char *rxMessage, int rLength, int ufd, struct sockaddr_in
 				}	
 				cJSON *pItem = cJSON_GetObjectItem(jDevice, "productuuid");
                 //custom_log("uuid is %s, JD_PROUUID is %s", pItem->valuestring, JD_PROUUID);
-				if( (strcmp(JD_PROUUID, pItem->valuestring) )||(pItem->valuestring[0]==0)||(strcmp("0", pItem->valuestring) ))
+				if( (strcmp((const char *)JD_PROUUID, (const char *)pItem->valuestring) )
+                     ||(pItem->valuestring[0]==0)
+                     ||(strcmp("0", (const char *)pItem->valuestring) ))
 				{
 					if((jdArgs.feedid[0]=='\0') || (jdArgs.feedid[0] == 0xFF))
 					{
@@ -117,11 +119,11 @@ void app_search_device(char *rxMessage, int rLength, int ufd, struct sockaddr_in
 					}
 					else
 					{
-						cJSON_AddStringToObject(root,"feedid", jdArgs.feedid);
+						cJSON_AddStringToObject(root,"feedid", (const char *)jdArgs.feedid);
 						custom_log("Configuration file exists");
 					}
-					cJSON_AddStringToObject(root,"mac", Jd_GlobalVar.mac);
-					cJSON_AddStringToObject(root,"productuuid", JD_PROUUID);
+					cJSON_AddStringToObject(root,"mac", (const char *)Jd_GlobalVar.mac);
+					cJSON_AddStringToObject(root,"productuuid", (const char *)JD_PROUUID);
 								
 					int length = PacketBuild(rxMessage, 2, 2, root);
 					iStatus = sendto(ufd, rxMessage, length, 0,(struct sockaddr *)&toaddr, (socklen_t)&sin_len);
@@ -148,16 +150,16 @@ void app_search_device(char *rxMessage, int rLength, int ufd, struct sockaddr_in
 					break;
 				}					
 				cJSON *pItem = cJSON_GetObjectItem(jDevice,"feedid");
-				strcpy(jdArgs.feedid, pItem->valuestring);
+				strcpy((char *)jdArgs.feedid, (const char *)pItem->valuestring);
 				pItem = cJSON_GetObjectItem(jDevice,"accesskey");
-				strcpy(jdArgs.accesskey, pItem->valuestring);
+				strcpy((char *)jdArgs.accesskey, (const char *)pItem->valuestring);
 				pItem = cJSON_GetObjectItem(jDevice,"server");
 				
 				int i =0;
 				cJSON * serverip_list = pItem->child;
 				while(serverip_list)
 				{
-					strcpy(jdArgs.iplist[i],serverip_list->valuestring);
+					strcpy((char *)jdArgs.iplist[i],(const char *)serverip_list->valuestring);
 					serverip_list = serverip_list->next;
 					i++;
 					custom_log("iplist[%d]:%s", i,jdArgs.iplist[i]);

@@ -345,12 +345,12 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
             <Strict>0</Strict>
-            <EnumInt>0</EnumInt>
+            <EnumInt>1</EnumInt>
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
@@ -361,7 +361,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls>--diag_suppress=494  --c99</MiscControls>
-              <Define>__KEIL_MDK__ __LPB100__ ZC_MODULE_VERSION=9 ZC_MODULE_TYPE=1</Define>
+              <Define>__KEIL_MDK__ __LPB100__ ZC_MODULE_VERSION=100 ZC_MODULE_TYPE=1</Define>
               <Undefine></Undefine>
               <IncludePath>../sdk/1.30/include/;..\sdk\1.30\cyassl\;..\sdk\1.30\include\lwip;..\src\AC\inc;..\src\aes;..\src\jdsmart;..\src\ZC\inc;..\src\ZC\inc\zc;..\src;..\src\ZC\inc\tropicssl</IncludePath>
             </VariousControls>

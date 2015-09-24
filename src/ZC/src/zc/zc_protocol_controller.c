@@ -1121,7 +1121,7 @@ void PCT_Run()
     PTC_ProtocolCon *pstruContoller = &g_struProtocolController;
     switch(pstruContoller->u8MainState)
     {
-        ZC_Printf("state is %d\n", pstruContoller->u8MainState);
+        //ZC_Printf("state is %d\n", pstruContoller->u8MainState);
         case PCT_STATE_SLEEP:
             break;
         case PCT_STATE_INIT:
@@ -1215,7 +1215,7 @@ void PCT_Sleep()
 *************************************************/
 u32 PCT_SendMsgToCloud(ZC_SecHead *pstruSecHead, u8 *pu8PlainData)
 {
-    u32 u32Index;
+    //u32 u32Index;
     u32 u32RetVal;
     u16 u16Len;
     u16 u16PaddingLen;

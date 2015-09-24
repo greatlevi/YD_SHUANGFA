@@ -10,6 +10,7 @@
 ssl_t ssl_data = {-1,0,0};
 extern u32 g_u32StopJdTask;
 //extern JD_JASON_ATTRIBUTE g_struJdAttribute[6];
+extern unsigned int Timer1GetTime(void);
 
 int tcp_connect_ssl_server(uint8_t *url,int port)
 {
@@ -17,7 +18,7 @@ int tcp_connect_ssl_server(uint8_t *url,int port)
 	int ret;
 	struct sockaddr_in addr;
 	struct sockaddr_in local_addr;
-	char *addrp=url;
+	char *addrp=(char *)url;
 	
 	if((memcmp(url, "HTTPS://", 8)==0)||(memcmp(url, "https://", 8)==0))
 		addrp= (char *)(url+8);
@@ -110,7 +111,7 @@ int JDssl_APP_upgrade(cJSON *pRoot)
 	int fw_version = cJSON_GetObjectItem(uPdate, "firm_version")->valueint;
 	int serial     = cJSON_GetObjectItem(pRoot, "serial")->valueint;
 
-	int length = sprintf(Jd_GlobalVar.ssl_tx, ssl_upgrade, serial, jdArgs.feedid, jdArgs.accesskey);
+	int length = sprintf((char *)Jd_GlobalVar.ssl_tx, ssl_upgrade, serial, jdArgs.feedid, jdArgs.accesskey);
 
 	set_network_state(HF_CLO_OTA, 1);
 	
@@ -132,7 +133,7 @@ int JDssl_APP_upgrade(cJSON *pRoot)
 
 	custom_log("Upgrade result:%d",up_result);
 	
-	length = sprintf(Jd_GlobalVar.ssl_tx, upgrade_response,
+	length = sprintf((char *)Jd_GlobalVar.ssl_tx, upgrade_response,
 				   cJSON_GetObjectItem(uPdate,"firm_version")->valueint,
 				   up_result, 
 			       cJSON_GetObjectItem(pRoot,"session_id")->valuestring,
@@ -226,7 +227,7 @@ static int JDCmdProcess(char *pBuf)
 					 continue;
 				}
 				cJSON* pTmp = cJSON_GetObjectItem(pItem, "stream_id");
-				uint8_t* sKey = pTmp->valuestring;
+				uint8_t* sKey = (uint8_t*)pTmp->valuestring;
 				
 				pTmp = cJSON_GetObjectItem(pItem, "current_value");
 
@@ -236,12 +237,12 @@ static int JDCmdProcess(char *pBuf)
 				jd_cmd.SN        = iCount;
 				
 				if(pTmp->type==cJSON_String)  /* 字符串的话直接赋值 */
-					jd_cmd.value = pTmp->valuestring;	
+					jd_cmd.value = (u8 *)pTmp->valuestring;	
 				else if(pTmp->type==cJSON_Number)
 				{
 					char str[25];
 					my_itoa(pTmp->valueint, str, 25);
-					jd_cmd.value = str;
+					jd_cmd.value = (u8 *)str;
 				}
         #if 0
 				cJSON* pJatt = cJSON_GetObjectItem(pRoot, "attribute");
@@ -258,7 +259,7 @@ static int JDCmdProcess(char *pBuf)
 			char* out = cJSON_PrintUnformatted( pJatt);
             /* 保存 attribute*/
             
-			int length = sprintf(Jd_GlobalVar.ssl_tx, "{\"code\": 102,\"attribute\":%s,\"result\":0,\"control_resp\":\"Succeed\",\"device\":{\"feed_id\":\"%s\",\"accees_key\":\"%s\"}}\n",
+			int length = sprintf((char *)Jd_GlobalVar.ssl_tx, "{\"code\": 102,\"attribute\":%s,\"result\":0,\"control_resp\":\"Succeed\",\"device\":{\"feed_id\":\"%s\",\"accees_key\":\"%s\"}}\n",
 									out,
 									jdArgs.feedid,
 									jdArgs.accesskey);
@@ -318,7 +319,7 @@ void heart_tick_report()
 	int ret;
   	const char sslHeart[]="{\"code\":101,\"device\":{\"feed_id\":\"%s\",\"access_key\":\"%s\",\"firm_version\":%d,\"rssi\":%d}}\n";
 
-	int length = sprintf(Jd_GlobalVar.ssl_tx, sslHeart,
+	int length = sprintf((char *)Jd_GlobalVar.ssl_tx, sslHeart,
             jdArgs.feedid, jdArgs.accesskey, jdArgs.fw_version,get_rssi_value());
 
     custom_log("*** %s", Jd_GlobalVar.ssl_tx);
@@ -326,7 +327,7 @@ void heart_tick_report()
 #ifdef CLOUD_SSL
 	if(NULL != ssl_data.ssl)
 	{
-		ret = jdssl_send(Jd_GlobalVar.ssl_tx);
+		ret = jdssl_send((char *)Jd_GlobalVar.ssl_tx);
 		if(ret <= 0)
 		{
 			custom_log("[E] heart tick send failed");
@@ -394,7 +395,7 @@ int jdssl_send(char *send_data)
 				if(FD_ISSET(ssl_data.fd,&wfds))
 				{
 					available = tcp_get_available(ssl_data.fd);
-					//custom_log("available:%d", available);
+					custom_log("available:%d", available);
 					
 					ret = CyaSSL_write(ssl_data.ssl, send_data, strlen(send_data));
 					if(ret <=0)
